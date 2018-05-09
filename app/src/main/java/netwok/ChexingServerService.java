@@ -1,7 +1,7 @@
 package netwok;
 
 
-import baseBean.LoginBean;
+import okhttp3.ResponseBody;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Headers;
@@ -12,6 +12,7 @@ public interface ChexingServerService {
     @POST("/api/authorizations")
     @FormUrlEncoded
     @Headers({"Accept:"+ Url.ACCEPT})
-    Observable<LoginBean> userLogin(@Field("username") String userName, @Field("password") String password);
+    Observable<ResponseBody> userLogin(@Field("username") String userName, @Field("password") String password);
+    //Call<ResponseBody> userLogin(@Field("username") String userName, @Field("password") String password);
 
 }

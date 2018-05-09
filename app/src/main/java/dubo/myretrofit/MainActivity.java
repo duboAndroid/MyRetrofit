@@ -5,9 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
-import baseBean.LoginBean;
 import netwok.ChexingServerService;
 import netwok.Url;
+import okhttp3.ResponseBody;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     private void sendData() {
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
@@ -68,28 +67,30 @@ public class MainActivity extends AppCompatActivity {
                 .baseUrl(Url.SERVER_URL+"/")
                 .build();
         ChexingServerService serverService = retrofit.create(ChexingServerService.class);
-        serverService.userLogin("13012340001","123456")      //获取Observable对象
+        serverService.userLogin("13012340001","1234567")     //获取Observable对象
                 .subscribeOn(Schedulers.newThread())    //请求在新线程中执行
                 .observeOn(Schedulers.io())             //请求完成后在io线程中执行
-                .doOnNext(new Action1<LoginBean>() {
+                .doOnNext(new Action1<ResponseBody>() {
                     @Override
-                    public void call(LoginBean baseBean) {
+                    public void call(ResponseBody baseBean) {
                         Log.i("TAG",baseBean.toString());
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())//最后在主线程中执行
-                .subscribe(new Subscriber<LoginBean>() {
+                .subscribe(new Subscriber<ResponseBody>() {
                     @Override
                     public void onCompleted() {
+                        System.out.print("onCompleted");
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        System.out.print("e");
                     }
 
                     @Override
-                    public void onNext(LoginBean loginBean) {
-                        Log.i("TAG",loginBean.toString());
+                    public void onNext(ResponseBody body) {
+                        System.out.print("body");
                     }
                 });
     }
